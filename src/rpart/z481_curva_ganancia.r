@@ -21,7 +21,7 @@ PARAM <- list()
 
 PARAM$dataset <- "./datasets/competencia_01.csv"
 
-PARAM$semilla_primigenia <- 102191
+PARAM$semilla_primigenia <- 343303
 
 PARAM$minsplit <- 300
 PARAM$minbucket <- 20
