@@ -10,7 +10,7 @@ require("lightgbm")
 
 # defino los parametros de la corrida, en una lista, la variable global  PARAM
 PARAM <- list()
-PARAM$experimento <- "KA4210_2"
+PARAM$experimento <- "KA4210_3"
 
 PARAM$semilla_primigenia <- 168943
 
@@ -32,7 +32,7 @@ PARAM$finalmodel$max_bin <- 31
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui empieza el programa
-setwd("C:/Users/Santy/Desktop/python/maestria/2024/DMEyF")
+setwd("C:/Users/Santi/Desktop/maestria/DMEyF")
 
 
 # cargo el dataset donde voy a entrenar
@@ -56,7 +56,7 @@ campos_buenos <- setdiff(colnames(dataset), c("clase_ternaria", "clase01"))
 
 # establezco donde entreno
 dataset[, train := 0L]
-dataset[foto_mes %in% PARAM$input$training, train := 1L]
+dataset[foto_mes <= PARAM$input$training, train := 1L]
 
 #--------------------------------------
 # creo las carpetas donde van los resultados
@@ -134,7 +134,7 @@ setorder(tb_entrega, -prob)
 # genero archivos con los  "envios" mejores
 # suba TODOS los archivos a Kaggle
 
-cortes <- seq(9000, 13000, by = 500)
+cortes <- seq(9000, 16000, by = 500)
 for (envios in cortes) {
   tb_entrega[, Predicted := 0L]
   tb_entrega[1:envios, Predicted := 1L]

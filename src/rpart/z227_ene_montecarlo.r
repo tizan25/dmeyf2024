@@ -122,7 +122,7 @@ salidas <- mcmapply(ArbolEstimarGanancia,
   PARAM$semillas, # paso el vector de semillas
   MoreArgs = list(PARAM), # aqui paso el segundo parametro
   SIMPLIFY = FALSE,
-  mc.cores = detectCores()
+  mc.cores = 1 #detectCores()
 )
 
 # muestro la lista de las salidas en testing
@@ -140,3 +140,4 @@ for( i in seq(10, 50, 10) )
 
 
 cat( "desvio : " , tb_salida[ , sd(ganancia_test) ], "\n" )
+

@@ -5,7 +5,7 @@ require("data.table")
 require("rpart")
 
 PARAM <- list()
-PARAM$semilla <- 102191
+PARAM$semilla <- 115571
 PARAM$training_pct <- 70L  # entre  1L y 99L 
 
 PARAM$rpart <- list (
@@ -40,7 +40,7 @@ particionar <- function(
 # Aqui comienza el programa
 
 # Establezco el Working Directory, elija una carpeta de su 
-setwd("~/buckets/b1/")
+# setwd("~/buckets/b1/")
 
 # cargo el dataset
 dataset <- fread("./datasets/competencia_01.csv")
@@ -99,3 +99,4 @@ cat("Estimulos: ", estimulos, "\n")
 cat("Aciertos (BAJA+2): ", aciertos, "\n")
 
 cat("Ganancia en testing (normalizada): ", ganancia_test_normalizada, "\n")
+

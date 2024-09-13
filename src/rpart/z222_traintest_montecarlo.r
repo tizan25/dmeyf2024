@@ -7,7 +7,7 @@ require("parallel")
 
 PARAM <- list()
 # reemplazar por las propias semillas
-PARAM$semillas <- c(102191, 200177, 410551, 552581, 892237)
+PARAM$semillas <- c(168943, 604829, 343303, 447569, 195043)
 
 PARAM$dataset_nom <- "./datasets/competencia_01.csv"
 
@@ -108,7 +108,7 @@ salidas <- mcmapply(ArbolEstimarGanancia,
   PARAM$semillas, # paso el vector de semillas
   MoreArgs = list(PARAM), # aqui paso el segundo parametro
   SIMPLIFY = FALSE,
-  mc.cores = detectCores()  # debe ser 1 si se trabaja con Windows
+  mc.cores = 1 # detectCores()  # debe ser 1 si se trabaja con Windows
 )
 
 # muestro la lista de las salidas en testing
@@ -127,3 +127,11 @@ cat( "ganancia promedio: ", tb_salida[, mean(ganancia_test)], "\n" )
 cat(  "ganancia desvio estandar: ", tb_salida[, sd(ganancia_test)], "\n" )
 
 # desvio estandar Distribucion Binomial   sqrt( n * p * (1-p) )
+
+# promedios para cada columna de tb_salida
+cat( "promedio de envios: ", tb_salida[, mean(envios)], "\n" )
+cat( "promedio de aciertos: ", tb_salida[, mean(aciertos)], "\n" )
+
+# promedio de testing y de testing pos
+cat( "promedio de testing: ", tb_salida[, mean(testing)], "\n" )
+cat( "promedio de testing_pos: ", tb_salida[, mean(testing_pos)], "\n" )
