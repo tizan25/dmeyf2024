@@ -26,6 +26,7 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 PARAM$experimento_data <- "PP7230"
+PARAM$dataset_name <- "dataset_us10.csv.gz"
 PARAM$experimento_bayesiana <- "HT7240"
 
 PARAM$experimento <- "KA7250"
@@ -58,7 +59,7 @@ setwd("~/buckets/b1/exp/")
 tb_BO_log <- fread(paste0(PARAM$experimento_bayesiana,"/BO_log.txt"))
 
 # cargo el dataset donde voy a entrenar el modelo
-dataset <- fread(paste0(PARAM$experimento_data,"/dataset.csv.gz"))
+dataset <- fread(paste0(PARAM$experimento_data,"/", PARAM$dataset_name))
 
 
 # creo la carpeta donde va el experimento

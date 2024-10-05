@@ -475,7 +475,7 @@ dataset[ foto_mes %in% PARAM$trainingstrategy$final_train &
 # elimino el campo azar, ya no lo uso mas
 dataset[, azar := NULL ]
 
-undersampling_val = PARAM$trainingstrategy$training_undersampling * 100
+undersampling_val = as.integer(PARAM$trainingstrategy$training_undersampling * 100)
 filename = paste0("dataset_us", undersampling_val, ".csv.gz")
 
 # Grabo el dataset
