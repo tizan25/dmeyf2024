@@ -25,7 +25,7 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "PP7430"
+PARAM$experimento <- "PP7431"
 
 PARAM$input$dataset <- "./datasets/competencia_01.csv"
 
@@ -38,11 +38,11 @@ PARAM$clase_minoritaria <- c("BAJA+1","BAJA+2")
 # los meses en los que vamos a entrenar
 #  la magia estara en experimentar exhaustivamente
 PARAM$trainingstrategy$testing <- c(202104)
-PARAM$trainingstrategy$validation <- c(202103)
-PARAM$trainingstrategy$training <- c(202102)
+PARAM$trainingstrategy$validation <- c(202104)
+PARAM$trainingstrategy$training <- c(202104)
 
 
-PARAM$trainingstrategy$final_train <- c(202102, 202103, 202104)
+PARAM$trainingstrategy$final_train <- c(202104)
 PARAM$trainingstrategy$future <- c(202106)
 
 # un undersampling de 0.1  toma solo el 10% de los CONTINUA
@@ -476,7 +476,7 @@ dataset[ foto_mes %in% PARAM$trainingstrategy$final_train &
 dataset[, azar := NULL ]
 
 undersampling_val = as.integer(PARAM$trainingstrategy$training_undersampling * 100)
-filename = paste0("dataset_us", undersampling_val, "_deflactado.csv.gz")
+filename = paste0("dataset_us", undersampling_val, "_deflactado_todo04.csv.gz")
 
 # Grabo el dataset
 fwrite( dataset,
