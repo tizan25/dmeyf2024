@@ -25,11 +25,11 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "PP7230"
+PARAM$experimento <- "PP7430"
 
 PARAM$input$dataset <- "./datasets/competencia_01.csv"
 
-PARAM$semilla_azar <- 604829 # Aqui poner su  primer  semilla
+PARAM$semilla_azar <- 168943 # Aqui poner su  primer  semilla
 
 
 PARAM$driftingcorreccion <- "ninguno"
@@ -476,7 +476,7 @@ dataset[ foto_mes %in% PARAM$trainingstrategy$final_train &
 dataset[, azar := NULL ]
 
 undersampling_val = as.integer(PARAM$trainingstrategy$training_undersampling * 100)
-filename = paste0("dataset_us", undersampling_val, ".csv.gz")
+filename = paste0("dataset_us", undersampling_val, "_deflactado.csv.gz")
 
 # Grabo el dataset
 fwrite( dataset,

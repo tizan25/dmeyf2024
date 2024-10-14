@@ -35,10 +35,10 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento_data <- "PP7230"
+PARAM$experimento_data <- "PP7430"
 PARAM$experimento <- "HT7340"
 
-PARAM$semilla_azar <- 102191 # Aqui poner su  primer  semilla
+PARAM$semilla_azar <- 168943 # Aqui poner su  primer  semilla
 
 # por ahora 1 para que no me llueva una catarata de preguntas de alumnos
 #  justo antes del cierre de la primera competencia
@@ -239,7 +239,7 @@ ksemillas <- sample(primos)[seq(PARAM$semillas_cantidad)]
 setwd("~/buckets/b1/exp/") # Establezco el Working Directory
 
 # cargo el dataset donde voy a entrenar el modelo
-dataset <- fread(paste0(PARAM$experimento_data,"/dataset.csv.gz"))
+dataset <- fread(paste0(PARAM$experimento_data,"/dataset_us25_deflactado.csv.gz"))
 
 
 # creo la carpeta donde va el experimento
