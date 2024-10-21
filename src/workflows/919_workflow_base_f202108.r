@@ -136,7 +136,7 @@ FEhist_base <- function( pinputexps)
 
   param_local$lag1 <- TRUE
   param_local$lag2 <- TRUE # no me engraso con los lags de orden 2
-  param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
+  param_local$lag3 <- TRUE # no me engraso con los lags de orden 3
 
   # no me engraso las manos con las tendencias
   param_local$Tendencias1$run <- TRUE  # FALSE, no corre nada de lo que sigue
