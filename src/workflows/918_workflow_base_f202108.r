@@ -420,7 +420,7 @@ KA_evaluate_kaggle <- function( pinputexps )
 # Este es el  Workflow Baseline
 # Que predice 202108 donde NO conozco la clase
 
-wf_primera <- function( pnombrewf )
+wf_lag1_driftblue <- function( pnombrewf )
 {
   param_local <- exp_wf_init( pnombrewf ) # linea workflow inicial fija
 
@@ -430,7 +430,7 @@ wf_primera <- function( pnombrewf )
   # Etapas preprocesamiento
   CA_catastrophe_base( metodo="MachineLearning")
   FEintra_manual_base()
-  DR_drifting_base(metodo="rank_cero_fijo")
+  DR_drifting_base(metodo="dolar_blue")
   FEhist_base()
 
   FErf_attributes_base( arbolitos= 20,
@@ -457,5 +457,5 @@ wf_primera <- function( pnombrewf )
 # Aqui comienza el programa
 
 # llamo al workflow con future = 202108
-wf_primera()
+wf_lag1_driftblue()
 
