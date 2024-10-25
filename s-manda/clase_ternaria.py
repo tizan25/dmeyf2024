@@ -1,12 +1,16 @@
 import numpy as np
 import pandas as pd
 import time
+import os
 
-DIR = '../datasets'
+current = os.getcwd()
+
+
+DIR = os.path.abspath(os.path.join(current, '../../buckets/b1/datasets'))
 
 # Cargamos los datos
 print('Cargando datos...')
-data = pd.read_csv(f'{DIR}/competencia_01_crudo.csv')
+data = pd.read_csv(f'{DIR}/competencia_02_crudo.csv.gz')
 
 # Inicio del proceso
 print('Procesando...')
@@ -42,7 +46,7 @@ print('Tiempo de procesamiento:', round(
 # Guardamos el dataset
 print('Guardando datos...')
 data.join(clientes['clase_ternaria']).to_csv(
-    f'{DIR}/competencia_01.csv', index=False)
+    f'{DIR}/competencia_02.csv.gz', index=False)
 
 # Mostramos la distribución de clases
 print('Distribución de clases:')
