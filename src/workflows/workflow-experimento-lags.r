@@ -132,7 +132,7 @@ FEhist_base <- function( pinputexps)
   if( -1 == (param_local <- exp_init())$resultado ) return( 0 ) # linea fija
 
 
-  param_local$meta$script <- "/src/wf-etapas/1502_FE_historia_lags.r.r"
+  param_local$meta$script <- "/src/wf-etapas/1502_FE_historia_lags.r"
 
   param_local$lags = c(1, 2, 6, 12)
   

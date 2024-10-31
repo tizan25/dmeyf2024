@@ -222,13 +222,12 @@ cols_lagueables <- copy(setdiff(
 setorderv(dataset, envg$PARAM$dataset_metadata$primarykey)
 
 
-if (lenght(envg$PARAM$lags) > 0) {
+if (length(envg$PARAM$lags) > 0) {
   
   for (lag in envg$PARAM$lags) {
     cat( "Inicio lag  ", lag, "\n")
     # creo los campos lags
-    var_name = paste0("envg$OUTPUT$lag", lag)
-    assign(var_name$ncol_antes, ncol(dataset))
+    envg$OUTPUT[[paste0("lag", lag)]] <- list(ncol_antes = ncol(dataset))
     
     dataset[, paste0(cols_lagueables, "_lag", lag) := shift(.SD, lag, NA, "lag"),
             by = eval( envg$PARAM$dataset_metadata$entity_id),
@@ -241,7 +240,7 @@ if (lenght(envg$PARAM$lags) > 0) {
       dataset[, paste0(vcol, "_delta", lag) := get(vcol) - get(paste0(vcol, "_lag", lag))]
     }
     
-    assign(var_name$ncol_despues, ncol(dataset))
+    envg$OUTPUT[[paste0("lag", lag)]] <- list(ncol_despues = ncol(dataset))
     GrabarOutput()
     cat( "Fin lag ", lag, "\n")
     cols_lagueables <- intersect(cols_lagueables, colnames(dataset))
