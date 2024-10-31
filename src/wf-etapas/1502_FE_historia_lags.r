@@ -222,70 +222,31 @@ cols_lagueables <- copy(setdiff(
 setorderv(dataset, envg$PARAM$dataset_metadata$primarykey)
 
 
-if (envg$PARAM$lags.length) {
-  cat( "Inicio lag1\n")
-  # creo los campos lags de orden 1
-  envg$OUTPUT$lag1$ncol_antes <- ncol(dataset)
-  dataset[, paste0(cols_lagueables, "_lag1") := shift(.SD, 1, NA, "lag"),
-    by = eval( envg$PARAM$dataset_metadata$entity_id),
-    .SDcols = cols_lagueables
-  ]
-
-  # agrego los delta lags de orden 1
-  for (vcol in cols_lagueables)
-  {
-    dataset[, paste0(vcol, "_delta1") := get(vcol) - get(paste0(vcol, "_lag1"))]
+if (lenght(envg$PARAM$lags) > 0) {
+  
+  for (lag in envg$PARAM$lags) {
+    cat( "Inicio lag  ", lag, "\n")
+    # creo los campos lags
+    var_name = paste0("envg$OUTPUT$lag", lag)
+    assign(var_name$ncol_antes, ncol(dataset))
+    
+    dataset[, paste0(cols_lagueables, "_lag", lag) := shift(.SD, lag, NA, "lag"),
+            by = eval( envg$PARAM$dataset_metadata$entity_id),
+            .SDcols = cols_lagueables
+    ]
+    
+    # agrego los delta lags
+    for (vcol in cols_lagueables)
+    {
+      dataset[, paste0(vcol, "_delta", lag) := get(vcol) - get(paste0(vcol, "_lag", lag))]
+    }
+    
+    assign(var_name$ncol_despues, ncol(dataset))
+    GrabarOutput()
+    cat( "Fin lag ", lag, "\n")
+    cols_lagueables <- intersect(cols_lagueables, colnames(dataset))
   }
-
-  envg$OUTPUT$lag1$ncol_despues <- ncol(dataset)
-  GrabarOutput()
-  cat( "Fin lag1\n")
 }
-
-
-cols_lagueables <- intersect(cols_lagueables, colnames(dataset))
-if (envg$PARAM$lag2) {
-  cat( "Inicio lag2\n")
-  # creo los campos lags de orden 2
-  envg$OUTPUT$lag2$ncol_antes <- ncol(dataset)
-  dataset[, paste0(cols_lagueables, "_lag2") := shift(.SD, 2, NA, "lag"),
-    by = eval(envg$PARAM$dataset_metadata$entity_id),
-    .SDcols = cols_lagueables
-  ]
-
-  # agrego los delta lags de orden 2
-  for (vcol in cols_lagueables)
-  {
-    dataset[, paste0(vcol, "_delta2") := get(vcol) - get(paste0(vcol, "_lag2"))]
-  }
-
-  envg$OUTPUT$lag2$ncol_despues <- ncol(dataset)
-  GrabarOutput()
-  cat( "Fin lag2\n")
-}
-
-
-cols_lagueables <- intersect(cols_lagueables, colnames(dataset))
-if (envg$PARAM$lag3) {
-  cat( "Inicio lag3\n")
-  # creo los campos lags de orden 3
-  envg$OUTPUT$lag3$ncol_antes <- ncol(dataset)
-  dataset[, paste0(cols_lagueables, "_lag3") := shift(.SD, 3, NA, "lag"),
-    by = eval(envg$PARAM$dataset_metadata$entity_id),
-    .SDcols = cols_lagueables
-  ]
-
-  # agrego los delta lags de orden 3
-  for (vcol in cols_lagueables)
-  {
-    dataset[, paste0(vcol, "_delta3") := get(vcol) - get(paste0(vcol, "_lag3"))]
-  }
-
-  envg$OUTPUT$lag3$ncol_despues <- ncol(dataset)
-  GrabarOutput()
-  cat( "Fin lag3\n")
-}
-
 
 #--------------------------------------
 # agrego las tendencias
