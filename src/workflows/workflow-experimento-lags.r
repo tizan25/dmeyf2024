@@ -265,18 +265,17 @@ TS_strategy_base8 <- function( pinputexps )
   param_local$meta$script <- "/src/wf-etapas/z2101_TS_training_strategy.r"
 
 
-  param_local$future <- c(202108)
+  param_local$future <- c(202106)
 
   param_local$final_train$undersampling <- 1.0
   param_local$final_train$clase_minoritaria <- c( "BAJA+1", "BAJA+2")
-  param_local$final_train$training <- c(202106, 202105, 202104,
-    202103, 202102, 202101)
-
-
-  param_local$train$training <- c(202104, 202103, 202102,
+  param_local$final_train$training <- c(202104, 202103, 202102,
     202101, 202012, 202011)
-  param_local$train$validation <- c(202105)
-  param_local$train$testing <- c(202106)
+
+
+  param_local$train$training <- c(202102, 202101, 202012, 202011, 202010, 202009)
+  param_local$train$validation <- c(202103)
+  param_local$train$testing <- c(202104)
 
   # Atencion  0.2  de  undersampling de la clase mayoritaria,  los CONTINUA
   # 1.0 significa NO undersampling
@@ -391,24 +390,27 @@ SC_scoring <- function( pinputexps )
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
-# proceso KA_evaluate_kaggle
+# proceso EV_conclase  Baseline
 # deterministico, SIN random
 
-KA_evaluate_kaggle <- function( pinputexps )
+EV_evaluate_conclase_gan <- function( pinputexps )
 {
   if( -1 == (param_local <- exp_init())$resultado ) return( 0 )# linea fija
-
-  param_local$meta$script <- "/src/wf-etapas/z2601_KA_evaluate_kaggle.r"
-
+  
+  param_local$meta$script <- "/src/wf-etapas/z2501_EV_evaluate_conclase_gan.r"
+  
   param_local$semilla <- NULL  # no usa semilla, es deterministico
-
-  param_local$isems_submit <- 1:20 # misterioso parametro, no preguntar
-
-  param_local$envios_desde <-   9000L
-  param_local$envios_hasta <-  13000L
-  param_local$envios_salto <-   500L
-  param_local$competition <- "dm-ey-f-2024-segunda"
-
+  
+  param_local$train$positivos <- c( "BAJA+2")
+  param_local$train$gan1 <- 273000
+  param_local$train$gan0 <-  -7000
+  param_local$train$meseta <- 2001
+  
+  # para graficar
+  param_local$graficar$envios_desde <-   8000L
+  param_local$graficar$envios_hasta <-  16000L
+  param_local$graficar$ventana_suavizado <- 2001L
+  
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
@@ -446,7 +448,7 @@ wf_experimento_lags <- function( pnombrewf )
   # Etapas finales
   fm <- FM_final_models_lightgbm( c(ht, ts8), ranks=c(1), qsemillas=5 )
   SC_scoring( c(fm, ts8) )
-  KA_evaluate_kaggle()  # genera archivos para Kaggle
+  EV_evaluate_conclase_gan()  # genera archivos para Kaggle
 
   return( exp_wf_end() ) # linea workflow final fija
 }
