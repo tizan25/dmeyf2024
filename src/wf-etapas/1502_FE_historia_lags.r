@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-cat( "ETAPA  z1501_FE_historia.r  INIT\n")
+cat( "ETAPA  1502_FE_historia.r  INIT\n")
 
 # Workflow  Feature Engineering historico
 
@@ -179,7 +179,7 @@ TendenciaYmuchomas <- function(
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui empieza el programa
-cat( "ETAPA  z1501_FE_historia.r  START\n")
+cat( "ETAPA  1502_FE_historia.r  START\n")
 action_inicializar() 
 
 # cargo el dataset donde voy a entrenar
@@ -341,4 +341,4 @@ GrabarOutput()
 #  archivos tiene a los files que debo verificar existen para no abortar
 
 action_finalizar( archivos = c("dataset.csv.gz","dataset_metadata.yml")) 
-cat( "ETAPA  z1501_FE_historia.r  END\n")
+cat( "ETAPA  1502_FE_historia.r  END\n")
