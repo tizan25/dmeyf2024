@@ -134,7 +134,7 @@ FEhist_base <- function( pinputexps)
 
   param_local$meta$script <- "/src/wf-etapas/1502_FE_historia_lags.r"
 
-  param_local$lags = c(1, 2, 6, 12)
+  param_local$lags = c(1, 2)
   
   # no me engraso las manos con las tendencias
   param_local$Tendencias1$run <- FALSE  # FALSE, no corre nada de lo que sigue
@@ -439,16 +439,16 @@ wf_experimento_lags <- function( pnombrewf )
     mtry_ratio= 0.2
   )
 
-  CN_canaritos_asesinos_base(ratio=0.2, desvio=4.0)
+  # CN_canaritos_asesinos_base(ratio=0.2, desvio=4.0)
 
   # Etapas modelado
   ts8 <- TS_strategy_base8()
   ht <- HT_tuning_base( bo_iteraciones = 40 )  # iteraciones inteligentes
 
   # Etapas finales
-  fm <- FM_final_models_lightgbm( c(ht, ts8), ranks=c(1), qsemillas=5 )
+  fm <- FM_final_models_lightgbm( c(ht, ts8), ranks=c(1), qsemillas=20 )
   SC_scoring( c(fm, ts8) )
-  EV_evaluate_conclase_gan()  # genera archivos para Kaggle
+  EV_evaluate_conclase_gan()
 
   return( exp_wf_end() ) # linea workflow final fija
 }
