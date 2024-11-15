@@ -222,6 +222,8 @@ AgregarVariables_IntraMes <- function(dataset) {
     envg$PARAM$dataset_metadata
   ))
   
+  cat( "cols_mezclables\n" )
+  
   # crear campos que sumen, resten, multipliquen y dividan las col_mezclables entre si
   for (i in 1:length(cols_mezclables)) {
     for (j in 1:length(cols_mezclables)) {
@@ -242,6 +244,8 @@ AgregarVariables_IntraMes <- function(dataset) {
           result[divisor == 0 | is.na(divisor)] <- NA  # Manejar divisiones por 0 o NA
           result
         }]
+        
+        cat(paste0(cols_mezclables[i], "_", cols_mezclables[j], " agregado\n"))
       }
     }
   }

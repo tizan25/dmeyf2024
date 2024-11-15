@@ -94,7 +94,7 @@ CA_catastrophe_base <- function( pinputexps, metodo )
 # Feature Engineering Intra Mes   Baseline
 # deterministico, SIN random
 
-FEintra_manual_base <- function( pinputexps )
+FEintra_manual_con_cruces <- function( pinputexps )
 {
   if( -1 == (param_local <- exp_init())$resultado ) return( 0 ) # linea fija
 
@@ -428,8 +428,8 @@ wf_feat_cruzadas_htnuevo <- function( pnombrewf )
   DT_incorporar_dataset( "~/buckets/b1/datasets/competencia_02.csv.gz")
 
   # Etapas preprocesamiento
-  CA_catastrophe_base( metodo="MachineLearning")
-  FEintra_manual_base()
+  CA_catastrophe_base( metodo="MachineLearning" ) 
+  FEintra_manual_con_cruces()
   DR_drifting_base(metodo="rank_cero_fijo")
   FEhist_base()
 
