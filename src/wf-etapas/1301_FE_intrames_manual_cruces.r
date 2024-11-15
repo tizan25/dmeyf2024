@@ -224,26 +224,15 @@ AgregarVariables_IntraMes <- function(dataset) {
   
   cat( "cols_mezclables\n" )
   
-  # crear campos que sumen, resten, multipliquen y dividan las col_mezclables entre si
+  # crear campos que sumen y dividan las col_mezclables entre si
   for (i in 1:length(cols_mezclables)) {
     for (j in 1:length(cols_mezclables)) {
       if (i != j) {
         # Suma
         dataset[, paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j]) := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
         
-        # Resta
-        dataset[, paste0("res_", cols_mezclables[i], "_", cols_mezclables[j]) := rowSums(cbind(get(cols_mezclables[i]), -get(cols_mezclables[j])), na.rm = TRUE)]
-        
-        # Multiplicación
-        dataset[, paste0("mult_", cols_mezclables[i], "_", cols_mezclables[j]) := Reduce(`*`, list(get(cols_mezclables[i]), get(cols_mezclables[j])))]
-        
-        # División (controlando división por cero)
-        dataset[, paste0("div_", cols_mezclables[i], "_", cols_mezclables[j]) := {
-          divisor <- get(cols_mezclables[j])
-          result <- get(cols_mezclables[i]) / divisor
-          result[divisor == 0 | is.na(divisor)] <- NA  # Manejar divisiones por 0 o NA
-          result
-        }]
+        # División
+        dataset[, paste0("div_", cols_mezclables[i], "_", cols_mezclables[j]) := get(cols_mezclables[i]) / get(cols_mezclables[j])]
         
         cat(paste0(cols_mezclables[i], "_", cols_mezclables[j], " agregado\n"))
       }
