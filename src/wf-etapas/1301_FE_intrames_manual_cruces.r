@@ -224,10 +224,11 @@ AgregarVariables_IntraMes <- function(dataset) {
   
   cat( "cols_mezclables\n" )
   
-  # crear campos que sumen y dividan las col_mezclables entre si
+  # crear campos que sumen y dividan las col_mezclables entre si, hacerlo para una cierta cantidad de campos al azar
   for (i in 1:length(cols_mezclables)) {
     for (j in 1:length(cols_mezclables)) {
-      if (i != j) {
+      rand <- runif(1)
+      if (i != j && rand < 0.01) {
         # Suma
         dataset[, paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j]) := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
         
