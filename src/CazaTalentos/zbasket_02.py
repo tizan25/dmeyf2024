@@ -1,13 +1,13 @@
-import  numpy as np
+import numpy as np
 
-np.random.seed(102191)
+np.random.seed(168943)
 
 # calcula cuantos encestes logra una jugadora con indice de enceste prob
 # haciendo qyt tiros libres
 
-def ftirar(prob, qty):
-  return sum(np.random.rand(qty) < prob)
 
+def ftirar(prob, qty):
+    return sum(np.random.rand(qty) < prob)
 
 
 # defino las jugadoras
@@ -26,13 +26,11 @@ vec_ftirar(jugadoras, 10)
 
 primera_ganadora = 0
 
-for i in range(10000): #d iez mil experimentos
-  vaciertos = vec_ftirar(jugadoras, 10) # 10 tiros libres cada jugadora
-  mejor = np.argmax(vaciertos)
-  if mejor == 0:
-    primera_ganadora += 1
-
-
+for i in range(10000):  # d iez mil experimentos
+    vaciertos = vec_ftirar(jugadoras, 10)  # 10 tiros libres cada jugadora
+    mejor = np.argmax(vaciertos)
+    if mejor == 0:
+        primera_ganadora += 1
 
 
 print(primera_ganadora)
