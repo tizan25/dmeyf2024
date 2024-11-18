@@ -230,12 +230,24 @@ AgregarVariables_IntraMes <- function(dataset) {
       rand <- runif(1)
       if (i != j && rand < 0.01) {
         # Suma
-        dataset[, paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j]) := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
+        # si algun campo comienza con ^(m|Visa_m|Master_m|vm_m) agregar m al ppio del nombre, sino no
+        if (grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[i]) || grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[j])) {
+          name <- paste0("m_sum_", cols_mezclables[i], "_", cols_mezclables[j]) 
+        } else {
+          name <- paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j])
+        }
+        dataset[, name := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
         
         # División
-        dataset[, paste0("div_", cols_mezclables[i], "_", cols_mezclables[j]) := get(cols_mezclables[i]) / get(cols_mezclables[j])]
+        if (grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[i]) || grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[j])) {
+          name <- paste0("m_div_", cols_mezclables[i], "_", cols_mezclables[j]) 
+        } else {
+          name <- paste0("div_", cols_mezclables[i], "_", cols_mezclables[j])
+        }
         
-        cat(paste0(cols_mezclables[i], "_", cols_mezclables[j], " agregado\n"))
+        dataset[, name := get(cols_mezclables[i]) / get(cols_mezclables[j])]
+        
+        cat(name, " agregado\n")
       }
     }
   }
