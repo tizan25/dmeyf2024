@@ -29,7 +29,7 @@ atributos_presentes <- function( patributos )
 {
   atributos <- unique( patributos )
   comun <- intersect( atributos, colnames(dataset) )
-
+  
   return(  length( atributos ) == length( comun ) )
 }
 #------------------------------------------------------------------------------
@@ -40,33 +40,33 @@ AgregarVariables_IntraMes <- function(dataset) {
   cat( "inicio AgregarVariables_IntraMes()\n")
   gc(verbose= FALSE)
   # INICIO de la seccion donde se deben hacer cambios con variables nuevas
-
+  
   # el mes 1,2, ..12
   if( atributos_presentes( c("foto_mes") ))
     dataset[, kmes := foto_mes %% 100]
-
+  
   # creo un ctr_quarter que tenga en cuenta cuando
   # los clientes hace 3 menos meses que estan
   # ya que seria injusto considerar las transacciones medidas en menor tiempo
   if( atributos_presentes( c("ctrx_quarter") ))
     dataset[, ctrx_quarter_normalizado := as.numeric(ctrx_quarter) ]
-
+  
   if( atributos_presentes( c("ctrx_quarter", "cliente_antiguedad") ))
     dataset[cliente_antiguedad == 1, ctrx_quarter_normalizado := ctrx_quarter * 5]
-
+  
   if( atributos_presentes( c("ctrx_quarter", "cliente_antiguedad") ))
     dataset[cliente_antiguedad == 2, ctrx_quarter_normalizado := ctrx_quarter * 2]
-
+  
   if( atributos_presentes( c("ctrx_quarter", "cliente_antiguedad") ))
     dataset[
       cliente_antiguedad == 3,
       ctrx_quarter_normalizado := ctrx_quarter * 1.2
     ]
-
+  
   # variable extraida de una tesis de maestria de Irlanda
   if( atributos_presentes( c("mpayroll", "cliente_edad") ))
     dataset[, mpayroll_sobre_edad := mpayroll / cliente_edad]
-
+  
   # se crean los nuevos campos para MasterCard  y Visa,
   #  teniendo en cuenta los NA's
   # varias formas de combinar Visa_status y Master_status
@@ -74,142 +74,142 @@ AgregarVariables_IntraMes <- function(dataset) {
   {
     dataset[, vm_status01 := pmax(Master_status, Visa_status, na.rm = TRUE)]
     dataset[, vm_status02 := Master_status + Visa_status]
-
+    
     dataset[, vm_status03 := pmax(
       ifelse(is.na(Master_status), 10, Master_status),
       ifelse(is.na(Visa_status), 10, Visa_status)
     )]
-
+    
     dataset[, vm_status04 := ifelse(is.na(Master_status), 10, Master_status)
-      + ifelse(is.na(Visa_status), 10, Visa_status)]
-
+            + ifelse(is.na(Visa_status), 10, Visa_status)]
+    
     dataset[, vm_status05 := ifelse(is.na(Master_status), 10, Master_status)
-      + 100 * ifelse(is.na(Visa_status), 10, Visa_status)]
-
+            + 100 * ifelse(is.na(Visa_status), 10, Visa_status)]
+    
     dataset[, vm_status06 := ifelse(is.na(Visa_status),
-      ifelse(is.na(Master_status), 10, Master_status),
-      Visa_status
+                                    ifelse(is.na(Master_status), 10, Master_status),
+                                    Visa_status
     )]
-
+    
     dataset[, mv_status07 := ifelse(is.na(Master_status),
-      ifelse(is.na(Visa_status), 10, Visa_status),
-      Master_status
+                                    ifelse(is.na(Visa_status), 10, Visa_status),
+                                    Master_status
     )]
   }
-
-
+  
+  
   # combino MasterCard y Visa
   if( atributos_presentes( c("Master_mfinanciacion_limite", "Visa_mfinanciacion_limite") ))
     dataset[, vm_mfinanciacion_limite := rowSums(cbind(Master_mfinanciacion_limite, Visa_mfinanciacion_limite), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_Fvencimiento", "Visa_Fvencimiento") ))
     dataset[, vm_Fvencimiento := pmin(Master_Fvencimiento, Visa_Fvencimiento, na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_Finiciomora", "Visa_Finiciomora") ))
     dataset[, vm_Finiciomora := pmin(Master_Finiciomora, Visa_Finiciomora, na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_msaldototal", "Visa_msaldototal") ))
     dataset[, vm_msaldototal := rowSums(cbind(Master_msaldototal, Visa_msaldototal), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_msaldopesos", "Visa_msaldopesos") ))
     dataset[, vm_msaldopesos := rowSums(cbind(Master_msaldopesos, Visa_msaldopesos), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_msaldodolares", "Visa_msaldodolares") ))
     dataset[, vm_msaldodolares := rowSums(cbind(Master_msaldodolares, Visa_msaldodolares), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mconsumospesos", "Visa_mconsumospesos") ))
     dataset[, vm_mconsumospesos := rowSums(cbind(Master_mconsumospesos, Visa_mconsumospesos), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mconsumosdolares", "Visa_mconsumosdolares") ))
     dataset[, vm_mconsumosdolares := rowSums(cbind(Master_mconsumosdolares, Visa_mconsumosdolares), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mlimitecompra", "Visa_mlimitecompra") ))
     dataset[, vm_mlimitecompra := rowSums(cbind(Master_mlimitecompra, Visa_mlimitecompra), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_madelantopesos", "Visa_madelantopesos") ))
     dataset[, vm_madelantopesos := rowSums(cbind(Master_madelantopesos, Visa_madelantopesos), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_madelantodolares", "Visa_madelantodolares") ))
     dataset[, vm_madelantodolares := rowSums(cbind(Master_madelantodolares, Visa_madelantodolares), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_fultimo_cierre", "Visa_fultimo_cierre") ))
     dataset[, vm_fultimo_cierre := pmax(Master_fultimo_cierre, Visa_fultimo_cierre, na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mpagado", "Visa_mpagado") ))
     dataset[, vm_mpagado := rowSums(cbind(Master_mpagado, Visa_mpagado), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mpagospesos", "Visa_mpagospesos") ))
     dataset[, vm_mpagospesos := rowSums(cbind(Master_mpagospesos, Visa_mpagospesos), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mpagosdolares", "Visa_mpagosdolares") ))
     dataset[, vm_mpagosdolares := rowSums(cbind(Master_mpagosdolares, Visa_mpagosdolares), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_fechaalta", "Visa_fechaalta") ))
     dataset[, vm_fechaalta := pmax(Master_fechaalta, Visa_fechaalta, na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mconsumototal", "Visa_mconsumototal") ))
     dataset[, vm_mconsumototal := rowSums(cbind(Master_mconsumototal, Visa_mconsumototal), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_cconsumos", "Visa_cconsumos") ))
     dataset[, vm_cconsumos := rowSums(cbind(Master_cconsumos, Visa_cconsumos), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_cadelantosefectivo", "Visa_cadelantosefectivo") ))
     dataset[, vm_cadelantosefectivo := rowSums(cbind(Master_cadelantosefectivo, Visa_cadelantosefectivo), na.rm = TRUE)]
-
+  
   if( atributos_presentes( c("Master_mpagominimo", "Visa_mpagominimo") ))
     dataset[, vm_mpagominimo := rowSums(cbind(Master_mpagominimo, Visa_mpagominimo), na.rm = TRUE)]
-
+  
   # a partir de aqui juego con la suma de Mastercard y Visa
   if( atributos_presentes( c("Master_mlimitecompra", "vm_mlimitecompra") ))
     dataset[, vmr_Master_mlimitecompra := Master_mlimitecompra / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("Visa_mlimitecompra", "vm_mlimitecompra") ))
     dataset[, vmr_Visa_mlimitecompra := Visa_mlimitecompra / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_msaldototal", "vm_mlimitecompra") ))
     dataset[, vmr_msaldototal := vm_msaldototal / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_msaldopesos", "vm_mlimitecompra") ))
     dataset[, vmr_msaldopesos := vm_msaldopesos / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_msaldopesos", "vm_msaldototal") ))
     dataset[, vmr_msaldopesos2 := vm_msaldopesos / vm_msaldototal]
-
+  
   if( atributos_presentes( c("vm_msaldodolares", "vm_mlimitecompra") ))
     dataset[, vmr_msaldodolares := vm_msaldodolares / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_msaldodolares", "vm_msaldototal") ))
     dataset[, vmr_msaldodolares2 := vm_msaldodolares / vm_msaldototal]
-
+  
   if( atributos_presentes( c("vm_mconsumospesos", "vm_mlimitecompra") ))
     dataset[, vmr_mconsumospesos := vm_mconsumospesos / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mconsumosdolares", "vm_mlimitecompra") ))
     dataset[, vmr_mconsumosdolares := vm_mconsumosdolares / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_madelantopesos", "vm_mlimitecompra") ))
     dataset[, vmr_madelantopesos := vm_madelantopesos / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_madelantodolares", "vm_mlimitecompra") ))
     dataset[, vmr_madelantodolares := vm_madelantodolares / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mpagado", "vm_mlimitecompra") ))
     dataset[, vmr_mpagado := vm_mpagado / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mpagospesos", "vm_mlimitecompra") ))
     dataset[, vmr_mpagospesos := vm_mpagospesos / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mpagosdolares", "vm_mlimitecompra") ))
     dataset[, vmr_mpagosdolares := vm_mpagosdolares / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mconsumototal", "vm_mlimitecompra") ))
     dataset[, vmr_mconsumototal := vm_mconsumototal / vm_mlimitecompra]
-
+  
   if( atributos_presentes( c("vm_mpagominimo", "vm_mlimitecompra") ))
     dataset[, vmr_mpagominimo := vm_mpagominimo / vm_mlimitecompra]
-
+  
   # Aqui debe usted agregar sus propias nuevas variables
-
+  
   campitos <- c( envg$PARAM$dataset_metadata$primarykey,
                  envg$PARAM$dataset_metadata$entity_id,
                  envg$PARAM$dataset_metadata$periodo,
@@ -224,33 +224,38 @@ AgregarVariables_IntraMes <- function(dataset) {
   
   cat( "cols_mezclables\n" )
   
-  # crear campos que sumen y dividan las col_mezclables entre si, hacerlo para una cierta cantidad de campos al azar
   for (i in 1:length(cols_mezclables)) {
     for (j in 1:length(cols_mezclables)) {
       rand <- runif(1)
       if (i != j && rand < 0.01) {
+        # Verificar si los nombres cumplen con el patrón
+        prefix_condition <- grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[i]) || 
+          grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[j])
+        
+        # Generar nombres para suma y división
+        name_sum <- if (prefix_condition) {
+          paste0("m_sum_", cols_mezclables[i], "_", cols_mezclables[j])
+        } else {
+          paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j])
+        }
+        
+        name_div <- if (prefix_condition) {
+          paste0("m_div_", cols_mezclables[i], "_", cols_mezclables[j])
+        } else {
+          paste0("div_", cols_mezclables[i], "_", cols_mezclables[j])
+        }
+        
         # Suma
-        # si algun campo comienza con ^(m|Visa_m|Master_m|vm_m) agregar m al ppio del nombre, sino no
-        if (grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[i]) || grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[j])) {
-          name <- paste0("m_sum_", cols_mezclables[i], "_", cols_mezclables[j]) 
-        } else {
-          name <- paste0("sum_", cols_mezclables[i], "_", cols_mezclables[j])
-        }
-        dataset[, name := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
+        dataset[, (name_sum) := rowSums(cbind(get(cols_mezclables[i]), get(cols_mezclables[j])), na.rm = TRUE)]
+        cat(name_sum, " agregado\n")
         
-        # División
-        if (grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[i]) || grepl("^(m|Visa_m|Master_m|vm_m)", cols_mezclables[j])) {
-          name <- paste0("m_div_", cols_mezclables[i], "_", cols_mezclables[j]) 
-        } else {
-          name <- paste0("div_", cols_mezclables[i], "_", cols_mezclables[j])
-        }
-        
-        dataset[, name := get(cols_mezclables[i]) / get(cols_mezclables[j])]
-        
-        cat(name, " agregado\n")
+        # División con manejo de divisores cero o NA
+        dataset[, (name_div) :=  get(cols_mezclables[i]) / get(cols_mezclables[j])]
+        cat(name_div, " agregado\n")
       }
     }
   }
+  
   
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
@@ -258,7 +263,7 @@ AgregarVariables_IntraMes <- function(dataset) {
     names(dataset),
     function(.name) dataset[, sum(is.infinite(get(.name)))]
   )
-
+  
   infinitos_qty <- sum(unlist(infinitos))
   if (infinitos_qty > 0) {
     cat(
@@ -267,8 +272,8 @@ AgregarVariables_IntraMes <- function(dataset) {
     )
     dataset[mapply(is.infinite, dataset)] <<- NA
   }
-
-
+  
+  
   # valvula de seguridad para evitar valores NaN  que es 0/0
   # paso los NaN a NA
   # se invita a asignar un valor razonable segun la semantica del campo creado
@@ -276,17 +281,17 @@ AgregarVariables_IntraMes <- function(dataset) {
     names(dataset),
     function(.name) dataset[, sum(is.nan(get(.name)))]
   )
-
+  
   nans_qty <- sum(unlist(nans))
   if (nans_qty > 0) {
     cat(
       "ATENCION, hay", nans_qty,
       "valores NaN 0/0 en tu dataset. Seran pasados arbitrariamente a NA\n"
     )
-
+    
     dataset[mapply(is.nan, dataset)] <<- NA
   }
-
+  
   cat( "fin AgregarVariables_IntraMes()\n")
 }
 #------------------------------------------------------------------------------
@@ -319,9 +324,9 @@ AgregarVariables_IntraMes(dataset)
 cat( "grabado del dataset\n")
 cat( "Iniciando grabado del dataset\n" )
 fwrite(dataset,
-  file = "dataset.csv.gz",
-  logical01 = TRUE,
-  sep = ","
+       file = "dataset.csv.gz",
+       logical01 = TRUE,
+       sep = ","
 )
 cat( "Finalizado grabado del dataset\n" )
 
@@ -329,7 +334,7 @@ cat( "Finalizado grabado del dataset\n" )
 # copia la metadata sin modificar
 cat( "grabado de metadata\n")
 write_yaml( envg$PARAM$dataset_metadata, 
-  file="dataset_metadata.yml" )
+            file="dataset_metadata.yml" )
 
 #------------------------------------------------------------------------------
 
@@ -347,8 +352,8 @@ tb_campos <- as.data.table(list(
 ))
 
 fwrite(tb_campos,
-  file = "dataset.campos.txt",
-  sep = "\t"
+       file = "dataset.campos.txt",
+       sep = "\t"
 )
 
 #------------------------------------------------------------------------------
