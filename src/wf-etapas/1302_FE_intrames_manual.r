@@ -220,7 +220,11 @@ AgregarVariables_IntraMes <- function(dataset) {
                     "ccallcenter_transacciones", "chomebanking_transacciones", 
                     "ccajas_transacciones", "catm_trx", "catm_trx_other")
   if (atributos_presentes(atributos_trx)) {
-    dataset[, trx_total := rowSums (cbind(atributos_trx),na.rm = TRUE)]
+    dataset[, trx_total := rowSums (cbind(ctrx_quarter_normalizado, ctarjeta_debito_transacciones,
+                                          ctarjeta_visa_transacciones, ctarjeta_master_transacciones,
+                                          cpayroll_trx, cpayroll2_trx, cforex, cforex_buy, cforex_sell,
+                                          ccallcenter_transacciones, chomebanking_transacciones, 
+                                          ccajas_transacciones, catm_trx, catm_trx_other),na.rm = TRUE)]
   }
   
   # Crear todas las combinaciones de atributos con "vm_limitecompra" haciendo sumas, restas, multiplicaciones y divisiones
