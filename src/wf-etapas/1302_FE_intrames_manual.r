@@ -226,16 +226,6 @@ AgregarVariables_IntraMes <- function(dataset) {
                                           ccallcenter_transacciones, chomebanking_transacciones, 
                                           ccajas_transacciones, catm_trx, catm_trx_other),na.rm = TRUE)]
   }
-  
-  # Crear todas las combinaciones de atributos con "vm_limitecompra" haciendo sumas, restas, multiplicaciones y divisiones
-  for (atr in colnames(dataset)) {
-    if (atr != "vm_limitecompra" && atr != envg$PARAM$dataset_metadata$clase){
-      dataset[, paste0("vm_lim_sum_", atr) := get(atr) + vm_mlimitecompra]
-      dataset[, paste0("vm_lim_resta_", atr) := get(atr) - vm_mlimitecompra]
-      dataset[, paste0("vm_lim_mult_", atr) := get(atr) * vm_mlimitecompra]
-      dataset[, paste0("vm_lim_div_", atr) := get(atr) / vm_mlimitecompra]
-    }
-  }
 
   # valvula de seguridad para evitar valores infinitos
   # paso los infinitos a NULOS
