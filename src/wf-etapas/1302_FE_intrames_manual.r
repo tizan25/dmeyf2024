@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-cat( "ETAPA  z1301_FE_intrames_manual.r  INIT\n")
+cat( "ETAPA  1302_FE_intrames_manual.r  INIT\n")
 
 # Workflow  Feature Engineering intrames manual artesanal
 
@@ -268,7 +268,7 @@ AgregarVariables_IntraMes <- function(dataset) {
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui comienza el programa
-cat( "ETAPA  z1301_FE_intrames_manual.r  START\n")
+cat( "ETAPA  1302_FE_intrames_manual.r  START\n")
 action_inicializar() 
 
 
@@ -340,4 +340,4 @@ GrabarOutput()
 #  archivos tiene a los files que debo verificar existen para no abortar
 
 action_finalizar( archivos = c("dataset.csv.gz","dataset_metadata.yml")) 
-cat( "ETAPA  z1301_FE_intrames_manual.r  END\n")
+cat( "ETAPA  1302_FE_intrames_manual.r  END\n")
