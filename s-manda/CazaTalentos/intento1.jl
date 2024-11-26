@@ -1,6 +1,6 @@
 using Random, Statistics, Dates
 
-function epsilon_n_greedy(num_players, true_probs, num_throws, epsilon_start=1.0, epsilon_decay=0.001)
+function epsilon_n_greedy(true_probs, num_throws, epsilon_start=1.0, epsilon_decay=0.001)
     """
     Epsilon-n-Greedy algorithm to identify the best basketball free throw shooter.
 
@@ -15,12 +15,13 @@ function epsilon_n_greedy(num_players, true_probs, num_throws, epsilon_start=1.0
     - best_player::Int: Index of the player with the highest estimated success rate.
     """
     # Initialize success counts and throw counts
+    num_players = length(true_probs)
     successes = zeros(Float64, num_players)
     player_throws = zeros(Int, num_players)
 
     for t in 1:num_throws
         # Compute epsilon for the current step
-        epsilon = epsilon_start / (1 + epsilon_decay * t)
+        epsilon = max.(epsilon_start / (1 + epsilon_decay * t), 0.00001)
 
         # Decide whether to explore or exploit
         if rand() < epsilon
@@ -48,7 +49,7 @@ function epsilon_n_greedy(num_players, true_probs, num_throws, epsilon_start=1.0
     return best_player
 end
 
-function simulate_epsilon_n_greedy_experiments(num_players, num_throws, epsilon_start, epsilon_decay, true_probs, num_experiments)
+function simulate_epsilon_n_greedy_experiments(num_throws, epsilon_start, epsilon_decay, true_probs, num_experiments)
     """
     Simulates multiple epsilon-n-greedy experiments to estimate the probability of selecting the best player.
 
@@ -66,9 +67,13 @@ function simulate_epsilon_n_greedy_experiments(num_players, num_throws, epsilon_
     true_best_player = argmax(true_probs)
     successes = 0
 
-    for _ in 1:num_experiments
-        best_player = epsilon_n_greedy(num_players, true_probs, num_throws, epsilon_start, epsilon_decay)
+    for i in 1:num_experiments
+        best_player = epsilon_n_greedy(true_probs, num_throws, epsilon_start, epsilon_decay)
         successes += (best_player == true_best_player ? 1 : 0)
+
+        if i % 1000 == 0
+            println("Experiment $i: Success rate = $(successes / i)")
+        end
     end
 
     return successes / num_experiments
@@ -81,16 +86,19 @@ function main()
     # probabilidades de 99 jugadores de 0.204, 0.206, 0.208, …, 0.400
     true_probs = [0.204 + 0.002 * i for i in 0:98] .+ 0.002
     push!(true_probs, 0.5)  # Agregar un jugador con probabilidad 0.5
-    num_throws = 15000  # Número de lanzamientos por experimento
+    num_throws = 5000  # Número de lanzamientos por experimento
     epsilon_start = 1.0  # Tasa de exploración inicial
     epsilon_decay = 0.0001  # Factor de decaimiento de exploración
-    num_experiments = 100000  # Número de experimentos a simular
+    num_experiments = 10000  # Número de experimentos a simular
+
+    # Establecer semilla
+    Random.seed!(1234)
 
     # Medir el tiempo de ejecución
-    println("Iniciando simulación...")
+    println("Iniciando simulación. Tiros por experimento: $num_throws, Epsilon decay: $epsilon_decay")
     start_time = now()
     success_rate = simulate_epsilon_n_greedy_experiments(
-        num_players, num_throws, epsilon_start, epsilon_decay, true_probs, num_experiments
+        num_throws, epsilon_start, epsilon_decay, true_probs, num_experiments
     )
     end_time = now()
 
