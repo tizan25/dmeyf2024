@@ -4,7 +4,7 @@ using DataFrames
 
 # Definir una función auxiliar para los tiros
 function ftirar(prob, qty)
-  return  sum(rand() < prob for i in 1:qty)
+    return sum(rand() < prob for i in 1:qty)
 end
 
 
@@ -16,7 +16,7 @@ GLOBAL_gimnasio = Dict()
 function gimnasio_init()
     GLOBAL_gimnasio[:taurasita] = 0.5
     GLOBAL_gimnasio[:jugadoras] = shuffle(append!([0.204:0.002:0.400;],
-      GLOBAL_gimnasio[:taurasita]))
+        GLOBAL_gimnasio[:taurasita]))
 
     GLOBAL_gimnasio[:tiros_total] = 0
 end
@@ -48,13 +48,13 @@ function ronda_eliminatoria!(planilla, tiros, desvios)
         return
     end
 
-    ids_juegan = planilla[planilla[!, :activa] .== 1, :id]
+    ids_juegan = planilla[planilla[!, :activa].==1, :id]
     resultados = gimnasio_tirar(ids_juegan, tiros)
-    planilla[planilla[!, :activa] .== 1, :encestes] .= resultados
+    planilla[planilla[!, :activa].==1, :encestes] .= resultados
 
     # Calcular la cantidad mínima de encestes para pasar a la siguiente ronda
-    encestes_corte = mean(planilla[planilla[!, :activa] .== 1, :encestes]) +
-      desvios * std(planilla[planilla[!, :activa] .== 1, :encestes])
+    encestes_corte = mean(planilla[planilla[!, :activa].==1, :encestes]) +
+                     desvios * std(planilla[planilla[!, :activa].==1, :encestes])
 
     # Poner en estado inactivo a las jugadoras por debajo del umbral
     for i in eachindex(planilla[!, :id])
@@ -77,51 +77,53 @@ function Estrategia_A()
 
     # Crear la planilla de la cazatalentos con todas las jugadoras activas
     planilla_cazatalentos = DataFrame(
-      id=[1:1:100;], # el numero en la espalda de la jugadora
-      activa=ones(Int, 100), # todas las jugadoras estan activas
-      encestes=zeros(Int,100) # cero encestes
+        id=[1:1:100;], # el numero en la espalda de la jugadora
+        activa=ones(Int, 100), # todas las jugadoras estan activas
+        encestes=zeros(Int, 100) # cero encestes
     )
 
     # Rondas 1 a 3
     # los seis valores que siguen
     #  me los reveló en un sueño la Diosa Namagiri Thayar
-    ronda_eliminatoria!(planilla_cazatalentos, 37,  0.0)
-    ronda_eliminatoria!(planilla_cazatalentos, 45, -0.1)
-    ronda_eliminatoria!(planilla_cazatalentos, 50,  0.0)
+    ronda_eliminatoria!(planilla_cazatalentos, 80, 0.0)
+    ronda_eliminatoria!(planilla_cazatalentos, 100, -0.1)
+    ronda_eliminatoria!(planilla_cazatalentos, 150, 0.0)
 
     # Ronda 4
-    ronda_eliminatoria!(planilla_cazatalentos, 200, 0)
+    ronda_eliminatoria!(planilla_cazatalentos, 300, 0)
 
     # Elegir a la jugadora con más encestes en la última ronda
-    pos_mejor = argmax(planilla_cazatalentos[planilla_cazatalentos[!, :activa] .== 1, :encestes])
-    jugadora_mejor = planilla_cazatalentos[planilla_cazatalentos[!, :activa] .== 1, :id][pos_mejor]
+    pos_mejor = argmax(planilla_cazatalentos[planilla_cazatalentos[!, :activa].==1, :encestes])
+    jugadora_mejor = planilla_cazatalentos[planilla_cazatalentos[!, :activa].==1, :id][pos_mejor]
 
-    return  gimnasio_veredicto(jugadora_mejor)
+    return gimnasio_veredicto(jugadora_mejor)
 end
 
 
-@time  begin  # mido el tiempo
+@time begin  # mido el tiempo
 
-# Estimación Montecarlo de la tasa de éxito de la Estrategia A
-Random.seed!(102191)  # fijar la semilla para reproducibilidad
+    # Estimación Montecarlo de la tasa de éxito de la Estrategia A
+    Random.seed!(102191)  # fijar la semilla para reproducibilidad
 
-tabla_veredictos = DataFrame(tiros_total=Int[], acierto=Int[])
+    tabla_veredictos = DataFrame(tiros_total=Int[], acierto=Int[])
 
-# repito el experimento 
-for experimento in 1:100000  # repeticiones montecarlo
-    if experimento % 10000 == 0  print(experimento, " ")  end
+    # repito el experimento 
+    for experimento in 1:100000  # repeticiones montecarlo
+        if experimento % 10000 == 0
+            print(experimento, " ")
+        end
 
-    veredicto = Estrategia_A()
-    push!(tabla_veredictos, veredicto)
-end
+        veredicto = Estrategia_A()
+        push!(tabla_veredictos, veredicto)
+    end
 
-println()
+    println()
 
-# calculo e imprimo metricas
-tiros_media = mean(tabla_veredictos.tiros_total)
-tasa_eleccion_correcta = mean(tabla_veredictos.acierto)
+    # calculo e imprimo metricas
+    tiros_media = mean(tabla_veredictos.tiros_total)
+    tasa_eleccion_correcta = mean(tabla_veredictos.acierto)
 
-println("La tasa de elección de la verdadera mejor es: ", tasa_eleccion_correcta)
-println("La cantidad de tiros promedio en lograrlo es: ", tiros_media)
+    println("La tasa de elección de la verdadera mejor es: ", tasa_eleccion_correcta)
+    println("La cantidad de tiros promedio en lograrlo es: ", tiros_media)
 
 end
