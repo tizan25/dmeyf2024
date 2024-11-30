@@ -443,7 +443,7 @@ KA_evaluate_kaggle_semillerio <- function( pinputexps )
 # A partir de ahora comienza la seccion de Workflows Completos
 #------------------------------------------------------------------------------
 
-wf_SEMI_sep_orden228_noundersampling <- function( pnombrewf )
+wf_SEMI_sep_orden228_fullconcanaritos <- function( pnombrewf )
 {
   param_local <- exp_wf_init( pnombrewf ) # linea fija
 
@@ -484,4 +484,4 @@ wf_SEMI_sep_orden228_noundersampling <- function( pnombrewf )
 # Aqui comienza el programa
 
 # llamo al workflow con future = 202109
-wf_SEMI_sep_orden228_noundersampling()
+wf_SEMI_sep_orden228_fullconcanaritos()
